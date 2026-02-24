@@ -11,6 +11,7 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/lvgl/lvgl.git
   GIT_TAG v9.1.0
 )
+set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf.h")
 FetchContent_MakeAvailable(lvgl)
 
 add_executable(roundie_sim
