@@ -112,3 +112,14 @@ target_sources(roundie_sim PRIVATE
 )
 
 target_compile_definitions(roundie_sim PRIVATE SDL_MAIN_HANDLED=1)
+
+# Copy SDL2.dll next to the executable so the artifact is self-contained.
+# Only needed on Windows when SDL2 was fetched (not a system/vcpkg install).
+if(WIN32 AND NOT SDL2_FOUND)
+  add_custom_command(TARGET roundie_sim POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      $<TARGET_FILE:SDL2::SDL2>
+      $<TARGET_FILE_DIR:roundie_sim>
+    COMMENT "Copying SDL2.dll to output directory"
+  )
+endif()
