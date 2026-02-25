@@ -45,10 +45,16 @@ FetchContent_Declare(
 # Must be set as a CACHE variable before FetchContent_MakeAvailable so LVGL
 # picks it up and adds it as a PUBLIC compile definition for all consumers.
 set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf.h" CACHE STRING "" FORCE)
-# LVGL v9 uses __declspec(dllimport) for extern data on MSVC, which requires a
-# shared library.  Build LVGL as a shared lib (DLL on Windows) so the import
-# symbols exist at link time.
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
+# On Windows/MSVC build LVGL as a static library to avoid the PreLink
+# "cmake -E __create_def" step that MSVC triggers when generating DLL export
+# tables (error MSB3073).  LVGL's LV_EXPORT_API macros expand to nothing for
+# static builds so there are no __declspec(dllimport) link errors.
+# On Linux/macOS the default (shared) is kept so existing behaviour is unchanged.
+if(MSVC)
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+else()
+  set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
+endif()
 FetchContent_MakeAvailable(lvgl)
 
 # LVGL's own SDL driver sources (#include "SDL2/SDL.h") need SDL2 headers.
