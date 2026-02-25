@@ -65,7 +65,7 @@ Install all via **Arduino Library Manager** or PlatformIO:
 
 | Library | Version | Notes |
 |---------|---------|-------|
-| [LVGL](https://github.com/lvgl/lvgl) | ≥ 8.3 | Enable `LV_COLOR_DEPTH 16`, Montserrat font 14 (`LV_FONT_MONTSERRAT_14`), `LV_USE_ARC`, `LV_USE_METER`/`LV_USE_SCALE`, `LV_USE_BTN`, `LV_USE_LABEL` in `lv_conf.h` |
+| [LVGL](https://github.com/lvgl/lvgl) | ≥ 8.3 | Enable `LV_COLOR_DEPTH 16`, Montserrat fonts (14, 16, 22, 26, 36), `LV_USE_ARC`, `LV_USE_METER`/`LV_USE_SCALE`, `LV_USE_BTN`, `LV_USE_LABEL` in `lv_conf.h` |
 | [mcp2515 by autowp](https://github.com/autowp/arduino-mcp2515) | latest | CAN controller |
 | [RTClib by Adafruit](https://github.com/adafruit/RTClib) | ≥ 2.1 | PCF85063 RTC |
 | Waveshare BSP for ESP32-S3-AMOLED-1.75 | — | Display & touch driver; see [Waveshare Wiki](https://www.waveshare.com/wiki/ESP32-S3-Touch-AMOLED-1.75) |

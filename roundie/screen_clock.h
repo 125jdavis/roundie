@@ -126,7 +126,7 @@ static lv_obj_t *createClockScreen(void) {
         lv_obj_t *lbl = lv_label_create(s_clockScreen);
         lv_label_set_text(lbl, numerals[i]);
         lv_obj_set_style_text_color(lbl, lv_color_white(), 0);
-        lv_obj_set_style_text_font(lbl, &lv_font_montserrat_14, 0);
+        lv_obj_set_style_text_font(lbl, &lv_font_montserrat_16, 0);
 
         float rad = _deg2rad(numAngles[i]);
         int32_t x = CLOCK_CX + (int32_t)(cosf(rad) * numR);

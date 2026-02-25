@@ -15,6 +15,10 @@
 
 /* Fonts used by your screens */
 #define LV_FONT_MONTSERRAT_14 1
+#define LV_FONT_MONTSERRAT_16 1
+#define LV_FONT_MONTSERRAT_22 1
+#define LV_FONT_MONTSERRAT_26 1
+#define LV_FONT_MONTSERRAT_36 1
 
 /* Optional but commonly needed */
 #define LV_USE_PERF_MONITOR 0

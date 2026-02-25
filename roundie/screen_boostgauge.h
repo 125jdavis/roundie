@@ -66,7 +66,7 @@ static lv_obj_t *createAnalogBoostScreen(void) {
     s_bgUnitLabel = lv_label_create(s_bgScreen);
     lv_label_set_text(s_bgUnitLabel, "bar");
     lv_obj_set_style_text_color(s_bgUnitLabel, lv_color_make(0xAA, 0xAA, 0xAA), 0);
-    lv_obj_set_style_text_font(s_bgUnitLabel, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(s_bgUnitLabel, &lv_font_montserrat_16, 0);
     lv_obj_align(s_bgUnitLabel, LV_ALIGN_CENTER, 0, 80);
 
     return s_bgScreen;
@@ -123,7 +123,7 @@ static lv_obj_t *createAnalogBoostScreen(void) {
     s_bgUnitLabel = lv_label_create(s_bgScreen);
     lv_label_set_text(s_bgUnitLabel, "bar");
     lv_obj_set_style_text_color(s_bgUnitLabel, lv_color_make(0xAA, 0xAA, 0xAA), 0);
-    lv_obj_set_style_text_font(s_bgUnitLabel, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(s_bgUnitLabel, &lv_font_montserrat_16, 0);
     lv_obj_align(s_bgUnitLabel, LV_ALIGN_CENTER, 0, 80);
 
     return s_bgScreen;
