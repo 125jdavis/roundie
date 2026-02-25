@@ -54,7 +54,7 @@ static lv_obj_t *createAnalogBoostScreen(void) {
 
     // Needle (orange)
     static int32_t needleVal = 0;
-    lv_scale_set_line_needle_value(s_bgScale, s_bgScale, 150, &needleVal);
+    lv_scale_set_line_needle_value(s_bgScale, s_bgScale, 150, needleVal);
 
     // Color scheme
     lv_obj_set_style_arc_color(s_bgScale, lv_color_make(0x44, 0x44, 0x44), LV_PART_MAIN);
@@ -78,7 +78,7 @@ static void updateAnalogBoostScreen(void) {
     float kpa = g_boostKpa < 0.0f ? 0.0f : (g_boostKpa > 300.0f ? 300.0f : g_boostKpa);
     static int32_t needleVal;
     needleVal = (int32_t)kpa;
-    lv_scale_set_line_needle_value(s_bgScale, s_bgScale, 150, &needleVal);
+    lv_scale_set_line_needle_value(s_bgScale, s_bgScale, 150, needleVal);
 
     if (!g_isMetric) {
         lv_label_set_text(s_bgUnitLabel, "psi");

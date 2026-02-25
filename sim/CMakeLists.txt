@@ -11,7 +11,9 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/lvgl/lvgl.git
   GIT_TAG v9.1.0
 )
-set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf.h")
+# Must be set as a CACHE variable before FetchContent_MakeAvailable so LVGL
+# picks it up and adds it as a PUBLIC compile definition for all consumers.
+set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf.h" CACHE STRING "" FORCE)
 FetchContent_MakeAvailable(lvgl)
 
 add_executable(roundie_sim
@@ -20,25 +22,9 @@ add_executable(roundie_sim
 )
 
 target_include_directories(roundie_sim PRIVATE
-  ${CMAKE_CURRENT_LIST_DIR}          # sim/ (Preferences.h stub)
+  ${CMAKE_CURRENT_LIST_DIR}          # sim/ first: config.h, Arduino.h, Preferences.h
   ${CMAKE_CURRENT_LIST_DIR}/../roundie
 )
-
-# Generate a tiny lv_conf.h for the simulator
-file(WRITE "${CMAKE_BINARY_DIR}/lv_conf.h" "
-#pragma once
-#define LV_USE_OS 0
-#define LV_COLOR_DEPTH 16
-#define LV_USE_LOG 1
-#define LV_LOG_LEVEL LV_LOG_LEVEL_WARN
-#define LV_FONT_MONTSERRAT_14 1
-#define LV_FONT_MONTSERRAT_20 1
-#define LV_FONT_MONTSERRAT_24 1
-#define LV_FONT_MONTSERRAT_28 1
-#define LV_FONT_MONTSERRAT_48 1
-")
-target_include_directories(roundie_sim PRIVATE ${CMAKE_BINARY_DIR})
-target_compile_definitions(roundie_sim PRIVATE LV_CONF_INCLUDE_SIMPLE=1)
 
 target_link_libraries(roundie_sim PRIVATE lvgl::lvgl SDL2::SDL2 SDL2::SDL2main)
 
@@ -50,4 +36,4 @@ target_sources(roundie_sim PRIVATE
   ${lvgl_SOURCE_DIR}/src/drivers/sdl/lv_sdl_mousewheel.c
 )
 
-target_compile_definitions(roundie_sim PRIVATE LV_USE_SDL=1 SDL_MAIN_HANDLED=1)
+target_compile_definitions(roundie_sim PRIVATE SDL_MAIN_HANDLED=1)
