@@ -57,6 +57,26 @@ else()
 endif()
 FetchContent_MakeAvailable(lvgl)
 
+# Explicitly add sim/ as a non-SYSTEM PUBLIC include so that
+# #include "lv_conf.h" (used by LV_CONF_INCLUDE_SIMPLE) resolves to
+# sim/lv_conf.h with higher priority than any SYSTEM include path.
+target_include_directories(lvgl PUBLIC "${CMAKE_CURRENT_LIST_DIR}")
+
+# LVGL 9.1.0 unconditionally appends
+#   INTERFACE LV_ATTRIBUTE_EXTERN_DATA=__declspec(dllimport)
+# for MSVC regardless of BUILD_SHARED_LIBS.  For a static build this causes
+# every consumer of lvgl headers (e.g. roundie_sim) to emit __imp_ references
+# that have no matching symbol in lvgl.lib, producing LNK2019 errors.
+# Strip that definition from lvgl's INTERFACE for static (non-DLL) builds.
+if(MSVC AND NOT BUILD_SHARED_LIBS)
+  get_target_property(_lvgl_iface_defs lvgl INTERFACE_COMPILE_DEFINITIONS)
+  if(_lvgl_iface_defs)
+    list(FILTER _lvgl_iface_defs EXCLUDE REGEX "^LV_ATTRIBUTE_EXTERN_DATA")
+    set_target_properties(lvgl PROPERTIES
+      INTERFACE_COMPILE_DEFINITIONS "${_lvgl_iface_defs}")
+  endif()
+endif()
+
 # LVGL's own SDL driver sources (#include "SDL2/SDL.h") need SDL2 headers.
 # When SDL2 came from vcpkg/system, forward its interface include directories;
 # when it came from FetchContent, use the thin forwarding-header layer.
