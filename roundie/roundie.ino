@@ -15,7 +15,7 @@
  *   3 – Setup screen (unit selection: Metric / 'Merican)
  *
  * Libraries required (install via Arduino Library Manager):
- *   - LVGL            ≥ 8.3  (lv_conf.h: LV_COLOR_DEPTH 16, LV_FONT_MONTSERRAT_xx)
+ *   - LVGL            ≥ 9.0  (lv_conf.h: LV_COLOR_DEPTH 16, LV_FONT_MONTSERRAT_xx)
  *   - mcp2515         by autowp (https://github.com/autowp/arduino-mcp2515)
  *   - RTClib          by Adafruit
  *   - Waveshare BSP / TFT_eSPI configured for CO5300 QSPI display
@@ -55,7 +55,7 @@
 // lv_conf.h must enable:
 //   LV_COLOR_DEPTH  16
 //   LV_FONT_MONTSERRAT_14, _20, _24, _28, _48
-//   LV_USE_ARC, LV_USE_METER (LVGL 8) or LV_USE_SCALE (LVGL 9)
+//   LV_USE_ARC, LV_USE_SCALE
 //   LV_USE_BTN, LV_USE_LABEL
 
 // ── MCP2515 CAN controller ────────────────────────────────────────────────────
@@ -70,8 +70,8 @@
 // Example: #include <ESP32_S3_Box.h>  or  #include <SWIRE_SH8601.h>
 // The display should expose:
 //   void display_init(void)
-//   void display_flush(lv_disp_drv_t*, const lv_area_t*, lv_color_t*)
-//   void touch_read(lv_indev_drv_t*, lv_indev_data_t*)
+//   void display_flush(lv_display_t*, const lv_area_t*, uint8_t*)
+//   void touch_read(lv_indev_t*, lv_indev_data_t*)
 //
 // *** PLACEHOLDER – replace with your actual Waveshare library include: ***
 // #include <WaveshareAMOLED.h>
@@ -113,7 +113,6 @@ Preferences g_prefs;
 
 // ── LVGL display buffer ───────────────────────────────────────────────────────
 // Double-buffer DMA for smooth rendering on ESP32-S3 with PSRAM
-static lv_disp_draw_buf_t s_drawBuf;
 // Each buffer holds 1/10 of the screen pixels – placed in PSRAM if available
 static lv_color_t *s_buf1 = nullptr;
 static lv_color_t *s_buf2 = nullptr;
@@ -145,14 +144,14 @@ static void _lvTickTimerCb(void) {
  * Transfers rendered pixels to the physical display.
  * *** Replace the body with your actual Waveshare CO5300 driver call. ***
  */
-static void _displayFlush(lv_disp_drv_t *drv, const lv_area_t *area,
-                           lv_color_t *colorMap) {
+static void _displayFlush(lv_display_t *disp, const lv_area_t *area,
+                           uint8_t *colorMap) {
     // Example for Waveshare BSP:
     //   waveshare_display_flush(area->x1, area->y1, area->x2, area->y2,
     //                           (uint16_t *)colorMap);
     //
-    // Always call lv_disp_flush_ready() when the transfer is complete:
-    lv_disp_flush_ready(drv);
+    // Always call lv_display_flush_ready() when the transfer is complete:
+    lv_display_flush_ready(disp);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -164,8 +163,8 @@ static void _displayFlush(lv_disp_drv_t *drv, const lv_area_t *area,
  * LVGL touch-read callback.
  * *** Replace the body with your actual CST9217 driver call. ***
  */
-static void _touchRead(lv_indev_drv_t *drv, lv_indev_data_t *data) {
-    (void)drv;
+static void _touchRead(lv_indev_t *indev, lv_indev_data_t *data) {
+    (void)indev;
     // Example for Waveshare BSP:
     //   uint16_t tx, ty;
     //   bool touched = waveshare_touch_read(&tx, &ty);
@@ -191,7 +190,7 @@ void switchToScreen(int idx) {
     if (!g_screens[idx]) return;
 
     g_currentScreen = idx;
-    lv_scr_load_anim(g_screens[idx], LV_SCR_LOAD_ANIM_FADE_ON, 200, 0, false);
+    lv_scr_load_anim(g_screens[idx], LV_SCR_LOAD_ANIM_FADE_IN, 200, 0, false);
 
     // Refresh setup highlight whenever we enter that screen
     if (idx == SCREEN_SETUP) {
@@ -300,26 +299,18 @@ void setup(void) {
         s_buf2 = fallbackBuf2;
         Serial.println("[LVGL] PSRAM unavailable – using internal RAM buffer");
     }
-    lv_disp_draw_buf_init(&s_drawBuf, s_buf1, s_buf2,
-                          DISPLAY_WIDTH * DISP_BUF_LINES);
-
-    // Register display driver
-    static lv_disp_drv_t dispDrv;
-    lv_disp_drv_init(&dispDrv);
-    dispDrv.hor_res  = DISPLAY_WIDTH;
-    dispDrv.ver_res  = DISPLAY_HEIGHT;
-    dispDrv.flush_cb = _displayFlush;
-    dispDrv.draw_buf = &s_drawBuf;
-    lv_disp_drv_register(&dispDrv);
+    lv_display_t *disp = lv_display_create(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    lv_display_set_flush_cb(disp, _displayFlush);
+    lv_display_set_buffers(disp, s_buf1, s_buf2,
+                           DISPLAY_WIDTH * DISP_BUF_LINES * sizeof(lv_color_t),
+                           LV_DISPLAY_RENDER_MODE_PARTIAL);
 
     // Register touch input device
-    static lv_indev_drv_t indevDrv;
-    lv_indev_drv_init(&indevDrv);
-    indevDrv.type    = LV_INDEV_TYPE_POINTER;
-    indevDrv.read_cb = _touchRead;
-    lv_indev_t *indev = lv_indev_drv_register(&indevDrv);
+    lv_indev_t *indev = lv_indev_create();
+    lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
+    lv_indev_set_read_cb(indev, _touchRead);
     // Enable gesture detection
-    indev->driver->gesture_limit = 20;   // minimum gesture distance in px
+    lv_indev_set_gesture_limit(indev, 20);   // minimum gesture distance in px
 
     // LVGL tick source via hardware timer (ESP32-S3)
     // Use a 1-kHz hardware timer to call lv_tick_inc every LV_TICK_PERIOD_MS ms

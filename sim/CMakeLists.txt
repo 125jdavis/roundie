@@ -32,8 +32,10 @@ file(WRITE "${CMAKE_BINARY_DIR}/lv_conf.h" "
 #define LV_USE_LOG 1
 #define LV_LOG_LEVEL LV_LOG_LEVEL_WARN
 #define LV_FONT_MONTSERRAT_14 1
+#define LV_FONT_MONTSERRAT_20 1
 #define LV_FONT_MONTSERRAT_24 1
 #define LV_FONT_MONTSERRAT_28 1
+#define LV_FONT_MONTSERRAT_48 1
 ")
 target_include_directories(roundie_sim PRIVATE ${CMAKE_BINARY_DIR})
 target_compile_definitions(roundie_sim PRIVATE LV_CONF_INCLUDE_SIMPLE=1)
