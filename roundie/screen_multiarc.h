@@ -102,13 +102,13 @@ static lv_obj_t *createMultiArcScreen(void) {
     s_lblBoostVal = lv_label_create(s_maScreen);
     lv_label_set_text(s_lblBoostVal, "---");
     lv_obj_set_style_text_color(s_lblBoostVal, lv_color_white(), 0);
-    lv_obj_set_style_text_font(s_lblBoostVal, &lv_font_montserrat_48, 0);
+    lv_obj_set_style_text_font(s_lblBoostVal, &lv_font_montserrat_14, 0);
     lv_obj_align(s_lblBoostVal, LV_ALIGN_CENTER, 0, -14);
 
     s_lblBoostUnit = lv_label_create(s_maScreen);
     lv_label_set_text(s_lblBoostUnit, "kPa");
     lv_obj_set_style_text_color(s_lblBoostUnit, lv_color_make(0xAA, 0xAA, 0xAA), 0);
-    lv_obj_set_style_text_font(s_lblBoostUnit, &lv_font_montserrat_20, 0);
+    lv_obj_set_style_text_font(s_lblBoostUnit, &lv_font_montserrat_14, 0);
     lv_obj_align(s_lblBoostUnit, LV_ALIGN_CENTER, 0, 30);
 
     // ── Bottom arc: Fuel Pressure (135° sweep) ────────────────────────────
