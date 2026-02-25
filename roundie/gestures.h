@@ -76,7 +76,7 @@ static void _screenEventCb(lv_event_t *e) {
 
     // Gesture events
     if (code == LV_EVENT_GESTURE) {
-        lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_get_act());
+        lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());
 
         if (g_currentScreen == SCREEN_SETUP) {
             // Only swipe-down exits setup

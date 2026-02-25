@@ -44,7 +44,7 @@ static inline float _deg2rad(float deg) { return deg * (float)M_PI / 180.0f; }
  * the bottom mid-point of the image so it pivots at the clock center.
  *
  * We draw each hand as a 4-px-wide, length-px-tall rectangle with a pivot at
- * the bottom center, then rotate via lv_obj_set_style_transform_angle().
+ * the bottom center, then rotate via lv_obj_set_style_transform_rotation().
  */
 static lv_obj_t *_createHand(lv_obj_t *parent, int32_t length, int32_t width,
                               lv_color_t color) {
@@ -98,7 +98,7 @@ static void _drawTicks(lv_obj_t *parent) {
 
         // Rotate the tick to point radially
         float angleDeg = (float)i * 6.0f;  // 0° at 12 o'clock, then clockwise
-        lv_obj_set_style_transform_angle(tick, (int32_t)(angleDeg * 10.0f), 0);
+        lv_obj_set_style_transform_rotation(tick, (int32_t)(angleDeg * 10.0f), 0);
         lv_obj_set_style_transform_pivot_x(tick, w / 2, 0);
         lv_obj_set_style_transform_pivot_y(tick, len / 2, 0);
     }
@@ -168,14 +168,14 @@ static void updateClockScreen(uint8_t hour, uint8_t minute, uint8_t second) {
     // Convert to 12-hour for the clock face
     uint8_t h12 = hour % 12;
 
-    // Angles in tenths-of-degrees (LVGL transform_angle unit)
+    // Angles in tenths-of-degrees (LVGL transform_rotation unit)
     // 12 o'clock = -90° (or 270°).  We use 0° = 12 o'clock convention:
     //   second hand: 6°/sec,  minute hand: 0.1°/sec,  hour hand: 0.00833°/sec
     int32_t secAngle  = (int32_t)(second * 6)            * 10;  // 6° per second
     int32_t minAngle  = (int32_t)(minute * 6 + second / 10) * 10;
     int32_t hourAngle = (int32_t)((h12 * 30) + (minute / 2)) * 10;
 
-    lv_obj_set_style_transform_angle(s_secondHand, secAngle,  0);
-    lv_obj_set_style_transform_angle(s_minuteHand, minAngle,  0);
-    lv_obj_set_style_transform_angle(s_hourHand,   hourAngle, 0);
+    lv_obj_set_style_transform_rotation(s_secondHand, secAngle,  0);
+    lv_obj_set_style_transform_rotation(s_minuteHand, minAngle,  0);
+    lv_obj_set_style_transform_rotation(s_hourHand,   hourAngle, 0);
 }
