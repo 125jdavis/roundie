@@ -11,6 +11,10 @@ include(FetchContent)
 # ---------------------------------------------------------------------------
 find_package(SDL2 CONFIG QUIET)
 if(NOT SDL2_FOUND)
+  message(STATUS "SDL2 not found via find_package – falling back to FetchContent.")
+  message(STATUS "  On Windows with vcpkg, install sdl2 and pass:")
+  message(STATUS "    -DCMAKE_TOOLCHAIN_FILE=<vcpkg>/scripts/buildsystems/vcpkg.cmake")
+  message(STATUS "    -DVCPKG_TARGET_TRIPLET=x64-windows  (when building -A x64)")
   message(STATUS "SDL2 not found on this system – fetching from GitHub")
   FetchContent_Declare(
     SDL2
@@ -47,9 +51,13 @@ set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf.h" CACHE STRING "" FORCE)
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
 FetchContent_MakeAvailable(lvgl)
 
-# When SDL2 was fetched (no system install), LVGL's own SDL driver sources
-# (gathered by GLOB_RECURSE) also need the SDL2/ forwarding-header layer.
-if(DEFINED _sdl2_fwd)
+# LVGL's own SDL driver sources (#include "SDL2/SDL.h") need SDL2 headers.
+# When SDL2 came from vcpkg/system, forward its interface include directories;
+# when it came from FetchContent, use the thin forwarding-header layer.
+if(SDL2_FOUND)
+  target_include_directories(lvgl PRIVATE
+    $<TARGET_PROPERTY:SDL2::SDL2,INTERFACE_INCLUDE_DIRECTORIES>)
+elseif(DEFINED _sdl2_fwd)
   target_include_directories(lvgl PRIVATE "${_sdl2_fwd}")
 endif()
 
