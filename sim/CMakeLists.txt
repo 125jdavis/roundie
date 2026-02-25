@@ -47,8 +47,9 @@ FetchContent_Declare(
 set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf.h" CACHE STRING "" FORCE)
 # On Windows/MSVC build LVGL as a static library to avoid the PreLink
 # "cmake -E __create_def" step that MSVC triggers when generating DLL export
-# tables (error MSB3073).  LVGL's LV_EXPORT_API macros expand to nothing for
-# static builds so there are no __declspec(dllimport) link errors.
+# tables (error MSB3073).  LVGL's own CMakeLists.txt still propagates
+# LV_ATTRIBUTE_EXTERN_DATA=__declspec(dllimport) as an INTERFACE definition
+# even for static builds; we strip that below after FetchContent_MakeAvailable.
 # On Linux/macOS the default (shared) is kept so existing behaviour is unchanged.
 if(MSVC)
   set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
@@ -56,6 +57,23 @@ else()
   set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
 endif()
 FetchContent_MakeAvailable(lvgl)
+
+# LVGL's CMakeLists.txt unconditionally propagates
+# LV_ATTRIBUTE_EXTERN_DATA=__declspec(dllimport) to all consumers via the
+# INTERFACE_COMPILE_DEFINITIONS of the lvgl target, regardless of whether
+# LVGL was built as a shared or static library.  For a static build (which we
+# force on MSVC above) this causes LNK2019 errors because the linker looks for
+# __imp_ symbols that only exist in DLL import libraries.  Strip the
+# dllimport annotation from the interface so that consumers see plain extern.
+if(MSVC)
+  get_target_property(_lvgl_iface_defs lvgl INTERFACE_COMPILE_DEFINITIONS)
+  if(_lvgl_iface_defs)
+    list(REMOVE_ITEM _lvgl_iface_defs
+      "LV_ATTRIBUTE_EXTERN_DATA=__declspec(dllimport)")
+    set_target_properties(lvgl PROPERTIES
+      INTERFACE_COMPILE_DEFINITIONS "${_lvgl_iface_defs}")
+  endif()
+endif()
 
 # LVGL's own SDL driver sources (#include "SDL2/SDL.h") need SDL2 headers.
 # When SDL2 came from vcpkg/system, forward its interface include directories;
