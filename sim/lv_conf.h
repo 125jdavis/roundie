@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LV_CONF_H
+#define LV_CONF_H
 
 /* Minimal LVGL config for PC simulator */
 
@@ -22,3 +23,5 @@
 /* Optional but commonly needed */
 #define LV_USE_PERF_MONITOR 0
 #define LV_USE_MEM_MONITOR 0
+
+#endif /* LV_CONF_H */
