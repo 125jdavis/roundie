@@ -39,6 +39,11 @@ A CMake-based LVGL9 simulator for the roundie display, built on SDL2.
 > **Note:** `-DVCPKG_TARGET_TRIPLET=x64-windows` is required when you pass
 > `-A x64` so CMake picks up the 64-bit SDL2 package from vcpkg.
 
+> **Note:** On Windows/MSVC, LVGL is compiled as a **static library** to avoid
+> the `cmake -E __create_def` PreLink failure (MSB3073) that occurs when CMake
+> auto-generates DLL export tables.  No extra steps are needed; CMake handles
+> this automatically.
+
 ## Building on Linux / macOS
 
 Install SDL2 via your package manager, then:
