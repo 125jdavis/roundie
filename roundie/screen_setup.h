@@ -99,7 +99,7 @@ static lv_obj_t *createSetupScreen(void) {
     s_lblSetupTitle = lv_label_create(s_setupScreen);
     lv_label_set_text(s_lblSetupTitle, "Units");
     lv_obj_set_style_text_color(s_lblSetupTitle, lv_color_white(), 0);
-    lv_obj_set_style_text_font(s_lblSetupTitle, &lv_font_montserrat_26, 0);
+    lv_obj_set_style_text_font(s_lblSetupTitle, &lv_font_unscii_16, 0);
     lv_obj_align(s_lblSetupTitle, LV_ALIGN_TOP_MID, 0, 60);
 
     // "Metric" button
@@ -111,7 +111,7 @@ static lv_obj_t *createSetupScreen(void) {
 
     lv_obj_t *lblMetric = lv_label_create(s_btnMetric);
     lv_label_set_text(lblMetric, "Metric");
-    lv_obj_set_style_text_font(lblMetric, &lv_font_montserrat_22, 0);
+    lv_obj_set_style_text_font(lblMetric, &lv_font_unscii_16, 0);
     lv_obj_center(lblMetric);
 
     // "'Merican" button
@@ -123,14 +123,14 @@ static lv_obj_t *createSetupScreen(void) {
 
     lv_obj_t *lblMerican = lv_label_create(s_btnMerican);
     lv_label_set_text(lblMerican, "'Merican");
-    lv_obj_set_style_text_font(lblMerican, &lv_font_montserrat_22, 0);
+    lv_obj_set_style_text_font(lblMerican, &lv_font_unscii_16, 0);
     lv_obj_center(lblMerican);
 
     // Hint label
     s_lblSetupHint = lv_label_create(s_setupScreen);
     lv_label_set_text(s_lblSetupHint, "Swipe down or hold 3s to exit");
     lv_obj_set_style_text_color(s_lblSetupHint, lv_color_make(0x80, 0x80, 0x80), 0);
-    lv_obj_set_style_text_font(s_lblSetupHint, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_font(s_lblSetupHint, &lv_font_unscii_8, 0);
     lv_obj_align(s_lblSetupHint, LV_ALIGN_BOTTOM_MID, 0, -50);
 
     // Apply initial selection highlight
