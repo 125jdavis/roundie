@@ -9,6 +9,9 @@
 #define LV_USE_LOG 1
 #define LV_LOG_LEVEL LV_LOG_LEVEL_WARN
 
+/* SDL display/input driver */
+#define LV_USE_SDL 1
+
 /* Fonts used by your screens */
 #define LV_FONT_MONTSERRAT_14 1
 #define LV_FONT_MONTSERRAT_20 1

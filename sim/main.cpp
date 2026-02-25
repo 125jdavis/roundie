@@ -1,7 +1,7 @@
 #include <lvgl.h>
 #include <SDL.h>
 
-#include "../roundie/config.h"
+#include "config.h"
 #include "../roundie/screen_clock.h"
 #include "../roundie/screen_multiarc.h"
 #include "../roundie/screen_boostgauge.h"
@@ -23,7 +23,6 @@ int main() {
     // Provided by LVGL SDL driver sources we compile in CMake
     extern lv_display_t* lv_sdl_window_create(int32_t width, int32_t height);
     extern void lv_sdl_window_set_title(lv_display_t* disp, const char* title);
-    extern void lv_sdl_window_update(void);
 
     lv_display_t* disp = lv_sdl_window_create(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     lv_sdl_window_set_title(disp, "roundie LVGL9 simulator");
@@ -59,7 +58,6 @@ int main() {
         last = now;
 
         lv_timer_handler();
-        lv_sdl_window_update();
         SDL_Delay(5);
     }
 
