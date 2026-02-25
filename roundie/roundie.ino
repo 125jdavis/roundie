@@ -15,7 +15,7 @@
  *   3 – Setup screen (unit selection: Metric / 'Merican)
  *
  * Libraries required (install via Arduino Library Manager):
- *   - LVGL            ≥ 9.0  (lv_conf.h: LV_COLOR_DEPTH 16, LV_FONT_MONTSERRAT_xx)
+ *   - LVGL            ≥ 9.0  (lv_conf.h: LV_COLOR_DEPTH 16, LV_FONT_UNSCII_8, LV_FONT_UNSCII_16)
  *   - mcp2515         by autowp (https://github.com/autowp/arduino-mcp2515)
  *   - RTClib          by Adafruit
  *   - Waveshare BSP / TFT_eSPI configured for CO5300 QSPI display
@@ -54,7 +54,7 @@
 #include <lvgl.h>
 // lv_conf.h must enable:
 //   LV_COLOR_DEPTH  16
-//   LV_FONT_MONTSERRAT_14, _16, _22, _26, _36
+//   LV_FONT_UNSCII_8, LV_FONT_UNSCII_16
 //   LV_USE_ARC, LV_USE_SCALE
 //   LV_USE_BTN, LV_USE_LABEL
 
