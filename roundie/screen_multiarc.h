@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <cstdio>
 #include <lvgl.h>
 #include "config.h"
 #include "can_handler.h"

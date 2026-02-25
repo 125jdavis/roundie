@@ -1,0 +1,27 @@
+name: Build Simulator
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Windows x64 (Release)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -S sim -B build/sim -G "Visual Studio 17 2022" -A x64
+
+      - name: Build
+        run: cmake --build build/sim --config Release --target roundie_sim
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: roundie_sim-windows-x64
+          path: build/sim/Release/roundie_sim.exe
