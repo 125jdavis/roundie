@@ -14,6 +14,10 @@ FetchContent_Declare(
 # Must be set as a CACHE variable before FetchContent_MakeAvailable so LVGL
 # picks it up and adds it as a PUBLIC compile definition for all consumers.
 set(LV_CONF_PATH "${CMAKE_CURRENT_LIST_DIR}/lv_conf.h" CACHE STRING "" FORCE)
+# LVGL v9 uses __declspec(dllimport) for extern data on MSVC, which requires a
+# shared library.  Build LVGL as a shared lib (DLL on Windows) so the import
+# symbols exist at link time.
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
 FetchContent_MakeAvailable(lvgl)
 
 add_executable(roundie_sim
