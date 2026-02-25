@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: roundie_sim-windows-x64
-          path: build/sim/Release/roundie_sim.exe
+          path: build/sim/Release/
