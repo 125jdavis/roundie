@@ -54,7 +54,7 @@
 #include <lvgl.h>
 // lv_conf.h must enable:
 //   LV_COLOR_DEPTH  16
-//   LV_FONT_MONTSERRAT_14, _20, _24, _28, _48
+//   LV_FONT_MONTSERRAT_14, _16, _22, _26, _36
 //   LV_USE_ARC, LV_USE_SCALE
 //   LV_USE_BTN, LV_USE_LABEL
 
